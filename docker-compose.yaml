@@ -1,0 +1,36 @@
+services:
+    # nginx    
+    router:
+        image: nginx:latest        
+        volumes:
+            - ./nginx-default.conf:/etc/nginx/conf.d/default.conf                        
+            - ./webapp/public:/var/www/html/public        
+        ports:
+            - "80:80"
+    # php
+    backend-php-server:
+        build:
+            dockerfile: ./php/Dockerfile
+            target: php-server
+        environment:
+            LOGGLY_TOKEN: "${LOGGLY_TOKEN}"
+        extra_hosts:
+            - host.docker.internal:host-gateway
+    # mysql
+    backend-mysql-database:
+        image: mysql:latest
+        volumes:
+            - mysqldata:/var/lib/mysql
+            - ./database:/docker-entrypoint-initdb.d            
+        restart: always                    
+        command: --init-file /docker-entrypoint-initdb.d/init.sql
+        environment:
+            MYSQL_ROOT_PASSWORD: "${MYSQL_PASSWORD}"
+            MYSQL_USER: "${MYSQL_USER}"
+            MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+            MYSQL_DATABASE: "${MYSQL_DATABASE}"
+        ports:
+            - "3307:3307"
+            
+volumes:
+    mysqldata:
