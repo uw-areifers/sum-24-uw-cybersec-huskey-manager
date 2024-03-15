@@ -1,6 +1,6 @@
 <?php
 
-$servername = "mysql-database";
+$servername = "backend-mysql-database";
 $username = "user";
 $password = "supersecretpw";
 $dbname = "password_manager";

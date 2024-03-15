@@ -11,9 +11,7 @@ services:
     backend-php-server:
         build:
             dockerfile: ./php/Dockerfile
-            target: php-server
-        environment:
-            LOGGLY_TOKEN: "${LOGGLY_TOKEN}"
+            target: backend-php-server
         extra_hosts:
             - host.docker.internal:host-gateway
     # mysql

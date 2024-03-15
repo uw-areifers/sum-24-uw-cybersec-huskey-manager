@@ -1,8 +1,7 @@
 <?php
 
-include '../components/loggly-logger.php';
 // Replace with your database connection details
-$hostname = 'mysql-database';
+$hostname = 'backend-mysql-database';
 $username = 'user';
 $password = 'supersecretpw';
 $database = 'password_manager';
@@ -11,7 +10,6 @@ $database = 'password_manager';
 $conn = new mysqli($hostname, $username, $password, $database);
 
 if ($conn->connect_error) {
-    $logger->error("Connection failed: " . $conn->connect_error);
     die('A fatal error occurred and has been logged.');
     // die("Connection failed: " . $conn->connect_error);
 }
@@ -34,8 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addUsername']) && iss
         if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
             $filePath = "'" . $uploadFile . "'";
         } else {
-            // Handle file upload error
-            $logger->error("Error uploading file.");
+            // Handle file upload error            
             die('Error uploading file.');
         }
     } else {
@@ -49,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addUsername']) && iss
     $resultAddPassword = $conn->query($queryAddPassword);
 
     if (!$resultAddPassword) {
-        $logger->error("Error adding password: " . $conn->error);
+        
         die('A fatal error occurred and has been logged.');
         // die("Error adding password: " . $conn->error);
     }
@@ -74,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editPasswordId']) && 
         if (move_uploaded_file($_FILES['editFile']['tmp_name'], $updateFile)) {
             $filePath = $updateFile;
         } else {
-            $logger->error("Error uploading file");
+            
             die('Error uploading file.');
         }
     } else {
@@ -88,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editPasswordId']) && 
             $filePath = $existingFilePath;
         } else {
             // Handle error if existing file path retrieval fails
-            $logger->error("Error retrieving existing file path.");
+
             die('Error retrieving existing file path.');
         }
     }
@@ -108,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editPasswordId']) && 
     $resultEditPassword = $conn->query($queryEditPassword);
 
     if (!$resultEditPassword) {
-        $logger->error("Error updating password: " . $conn->error);
+
         die('A fatal error occurred and has been logged. File: ' . $filePathSQL . 'Query: ' . $queryEditPassword . ' Error: ' . $conn->error);
     }
 
@@ -127,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deletePasswordId']) &
     $resultDeletePassword = $conn->query($queryDeletePassword);
 
     if (!$resultDeletePassword) {
-        $logger->error("Error deleting password: " . $conn->error);
+        
         die('A fatal error occurred and has been logged.');
         // die("Error deleting password: " . $conn->error);
     }
@@ -197,19 +194,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteFilePasswordId'
                 $resultUpdateFilePath = $conn->query($queryUpdateFilePath);
 
                 if (!$resultUpdateFilePath) {
-                    $logger->error("Error updating file path after deletion: " . $conn->error);
                     die('A fatal error occurred and has been logged.');
                 }
             } else {
-                $logger->error("Error deleting file: Could not unlink file.");
                 die('A fatal error occurred while deleting the file.');
             }
         } else {
-            $logger->error("Error deleting file: File does not exist.");
             die('The file to be deleted does not exist.');
         }
-    } else {
-        $logger->error("Error deleting file: File path not found.");
+    } else {        
         die('The file path associated with the password was not found.');
     }
 

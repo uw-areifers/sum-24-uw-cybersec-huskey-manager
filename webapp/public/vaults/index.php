@@ -1,9 +1,9 @@
 <?php
 
 include '../components/authenticate.php';
-include '../components/loggly-logger.php';
 
-$hostname = 'mysql-database';
+
+$hostname = 'backend-mysql-database';
 $username = 'user';
 $password = 'supersecretpw';
 $database = 'password_manager';
@@ -11,7 +11,7 @@ $database = 'password_manager';
 $conn = new mysqli($hostname, $username, $password, $database);
 
 if ($conn->connect_error) {
-    $logger->error("Connection failed: " . $conn->connect_error);
+    
     die('A fatal error occurred and has been logged.');
     //die("Connection failed: " . $conn->connect_error);
 }
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vaultName'])) {
     $result = $conn->query($query);
 
     if (!$result) {
-        $logger->error("Error adding vault: " . $conn->error);
+        
         die('A fatal error occurred and has been logged.');
         // die("Error adding vault: " . $conn->error);
     }
@@ -50,17 +50,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vaultName'])) {
         $resultInsertPermission = $conn->query($queryInsertPermission);
     
         if (!$resultInsertPermission) {
-            $logger->error("Error adding permission, Query : " .  $queryInsertPermission . " Error Info : " . $conn->error);
+            
           //  die("Error adding permission, Query : " .  $queryInsertPermission . " Error Info : " . $conn->error);
             die('A fatal error occurred while adding permission.');
-        } else {
-            $logger->info( "Permission added successfully!");
-        }
+        } 
     } else {
         die("User with username '$user' not found.");
     }
-
-    $logger->info('Vault Added', ['vault' => $vaultName, 'added_by' => $_COOKIE['authenticated']]);
 
     // Redirect to the current page after adding the vault
     header("Location: {$_SERVER['PHP_SELF']}");
@@ -75,13 +71,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editVaultName']) && i
     $query = "UPDATE vaults SET vault_name = '$editVaultName' WHERE vault_id = $editVaultId";
     $result = $conn->query($query);
 
-    if (!$result) {
-        $logger->error("Error editing vault: " . $conn->error);
+    if (!$result) {        
         die('A fatal error occurred and has been logged.');
         // die("Error editing vault: " . $conn->error);
-    }
-    
-    $logger->info('Vault Edited', ['vault_id' => $editVaultId, 'edited_by' => $_COOKIE['authenticated']]);
+    } 
 
     // Redirect to the current page after editing the vault
     header("Location: {$_SERVER['PHP_SELF']}");
@@ -96,13 +89,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteVaultId']) && !
 
     $result = $conn->query($query);
 
-    if (!$result) {
-        $logger->error("Error deleting vault: " . $conn->error);
+    if (!$result) { 
         die('A fatal error occurred and has been logged.');
         //die("Error deleting vault: " . $conn->error);
     }
-
-    $logger->info('Vault Deleted', ['vault_id' => $deleteVaultId, 'deleted_by' => $_COOKIE['authenticated']]);
 
     // Redirect to the current page after deleting the vault
     header("Location: {$_SERVER['PHP_SELF']}");

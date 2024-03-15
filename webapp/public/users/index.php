@@ -1,17 +1,15 @@
 <?php
 
 include '../components/authenticate.php';
-include '../components/loggly-logger.php';
 
-$hostname = 'mysql-database';
+$hostname = 'backend-mysql-database';
 $username = 'user';
 $password = 'supersecretpw';
 $database = 'password_manager';
 
 $conn = new mysqli($hostname, $username, $password, $database);
 
-if ($conn->connect_error) {
-    $logger->error("Connection failed: " . $conn->connect_error);
+if ($conn->connect_error) {    
     die('A fatal error occurred and has been logged.');
     // die("Connection failed: " . $conn->connect_error);
 }
@@ -35,20 +33,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $last_name = $conn->real_escape_string($_POST['last_name']);
                     $email = $conn->real_escape_string($_POST['email']);
                     $password = $conn->real_escape_string($_POST['password']);
+                    
 
-                    $password_hash = hash('sha256', $password . 'mysalty!');
-
-                    $query = "INSERT INTO users (username, first_name, last_name, email, password_hash) VALUES ('$username', '$first_name', '$last_name', '$email', '$password_hash')";
+                    $query = "INSERT INTO users (username, first_name, last_name, email, password, default_role_id) VALUES ('$username', '$first_name', '$last_name', '$email', '$password', 3)";
                     $result = $conn->query($query);
 
-
                     if (!$result) {
-                        $logger->error("Error adding user: " . $conn->error);
+                      
                         die('A fatal error occurred and has been logged.');
                         // die("Error adding user: " . $conn->error);
                     }
 
-                      $logger->info('New User Added', ['username' => $username, 'added_by' => $_COOKIE['authenticated']]);
+                      
                       // Redirect to the current page after handling a POST
                       header("Location: {$_SERVER['PHP_SELF']}");
                       exit();
@@ -68,12 +64,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $result = $conn->query($query);
 
                     if (!$result) {
-                        $logger->error("Error editing user: " . $conn->error);
+                        
                         die('A fatal error occurred and has been logged.');
                         // die("Error editing user: " . $conn->error);
                     }
 
-                    $logger->info('User Edited', ['user_id' => $user_id, 'edited_by' => $_COOKIE['authenticated']]);
+                    
                     header("Location: {$_SERVER['PHP_SELF']}");
                     exit();
                 }
@@ -88,11 +84,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $result = $conn->query($query);
 
                     if (!$result) {
-                        $logger->error("Error deleting user: " . $conn->error);
+                        
                         die('A fatal error occurred and has been logged.');
                         // die("Error deleting user: " . $conn->error);
                     }
-                    $logger->info('User Deleted', ['username' => $username, 'deleted_by' => $_f['authenticated']]);
+                    
 
                         header("Location: {$_SERVER['PHP_SELF']}");
                         exit();
@@ -195,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         Edit
                     </button>
                     <!-- Delete button to open a modal for deleting a user -->
-                    <button class="btn btn-danger btn-sm delete-btn" data-toggle="modal" data-user_id="<?php echo $user['user_id']; ?>" data-target="#deleteUserModal">
+                    <button class="btn btn-danger btn-sm delete-btn" data-toggle="modal" data-userid="<?php echo $user['user_id']; ?>" data-target="#deleteUserModal">
                         Delete
                     </button>
                 </td>

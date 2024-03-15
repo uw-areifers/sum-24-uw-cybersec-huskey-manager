@@ -1,7 +1,7 @@
 <?php
 
 
-$hostname = 'mysql-database';
+$hostname = 'backend-mysql-database';
 $username = 'user';
 $password = 'supersecretpw';
 $database = 'password_manager';

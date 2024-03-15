@@ -2,14 +2,12 @@
 
 session_start();
 
-include './components/loggly-logger.php';
-
-$hostname = 'mysql-database';
+$hostname = 'backend-mysql-database';
 $username = 'user';
 $password = 'supersecretpw';
 $database = 'password_manager';
 
-$logger->debug('Login page called');
+
 $conn = new mysqli($hostname, $username, $password, $database);
 
 if ($conn->connect_error) {
@@ -19,8 +17,7 @@ if ($conn->connect_error) {
 unset($error_message);
 
 if ($conn->connect_error) {
-    $errorMessage = "Connection failed: " . $conn->connect_error;
-    $logger->error($errorMessage); // Log the error
+    $errorMessage = "Connection failed: " . $conn->connect_error;    
     die($errorMessage);
 }
 
@@ -50,8 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: index.php");
         exit();
     } else {
-        $error_message = 'Invalid username or password.';
-        $logger->warning("Login failed for username: $username"); // Log login failure
+        $error_message = 'Invalid username or password.';        
     }
 
     $conn->close();
