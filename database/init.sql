@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     default_role_id INT,    
+    approved INT,
     FOREIGN KEY (default_role_id) REFERENCES roles(role_id) ON DELETE CASCADE 
 );
 
@@ -69,20 +70,20 @@ VALUES
 -- Insert sample users
 -- Hashed Password Values ARE john_doe:'thisismysecret'
 -- and jane_smith:'ihatemyjob'
-INSERT INTO users (user_id, username, first_name, last_name, email, password, default_role_id)
+INSERT INTO users (user_id, username, first_name, last_name, email, password, default_role_id, approved)
 VALUES
-    (1, 'username', 'User', 'Name', 'user@info310.net', 'password!', 3),
-    (2, 'admin', 'Super', 'Admin', 'admin@info310.com', 'Sup3rS3cr3t@dm1n', 1),
-    (3, 'johndoe', 'John', 'Doe', 'john.doe@info310.com', 'SecureP@ssw0rd', 3),
-    (4, 'janedoe', 'Jane', 'Doe', 'jane.doe@info310.com', 'Doe12345', 3),
-    (5, 'alice_smith', 'Alice', 'Smith', 'alice.smith@info310.com', 'SmithPass123', 3),
-    (6, 'bob_johnson', 'Bob', 'Johnson', 'bob.johnson@info310.com', 'Johnson1234', 3),
-    (7, 'sarah_wilson', 'Sarah', 'Wilson', 'sarah.wilson@info310.com', 'Wilson9876', 3),
-    (8, 'mike_brown', 'Mike', 'Brown', 'mike.brown@info310.com', 'BrownPass456', 3),
-    (9, 'emily_davis', 'Emily', 'Davis', 'emily.davis@info310.com', 'DavisSecure789', 3),
-    (10, 'kevin_clark', 'Kevin', 'Clark', 'kevin.clark@info310.com', 'Clark123!', 3),
-    (11, 'laura_jones', 'Laura', 'Jones', 'laura.jones@info310.com', 'JonesPass432', 3),
-    (12, 'chris_miller', 'Chris', 'Miller', 'chris.miller@info310.com', 'MillerSecure123', 3);
+    (1, 'username', 'User', 'Name', 'user@info310.net', 'password!', 3, 1),
+    (2, 'admin', 'Super', 'Admin', 'admin@info310.com', 'Sup3rS3cr3t@dm1n', 1, 1),
+    (3, 'johndoe', 'John', 'Doe', 'john.doe@info310.com', 'SecureP@ssw0rd', 3, 1),
+    (4, 'janedoe', 'Jane', 'Doe', 'jane.doe@info310.com', 'Doe12345', 3, 1),
+    (5, 'alice_smith', 'Alice', 'Smith', 'alice.smith@info310.com', 'SmithPass123', 3, 1),
+    (6, 'bob_johnson', 'Bob', 'Johnson', 'bob.johnson@info310.com', 'Johnson1234', 3, 1),
+    (7, 'sarah_wilson', 'Sarah', 'Wilson', 'sarah.wilson@info310.com', 'Wilson9876', 3, 1),
+    (8, 'mike_brown', 'Mike', 'Brown', 'mike.brown@info310.com', 'BrownPass456', 3, 1),
+    (9, 'emily_davis', 'Emily', 'Davis', 'emily.davis@info310.com', 'DavisSecure789', 3, 1),
+    (10, 'kevin_clark', 'Kevin', 'Clark', 'kevin.clark@info310.com', 'Clark123!', 3, 1),
+    (11, 'laura_jones', 'Laura', 'Jones', 'laura.jones@info310.com', 'JonesPass432', 3, 1),
+    (12, 'chris_miller', 'Chris', 'Miller', 'chris.miller@info310.com', 'MillerSecure123', 3, 1);
 
 
 
@@ -106,8 +107,7 @@ VALUES
     -- Fake logins for "HR Vault"
     (8, 3, 'hr1', 'hrportal.com', 'hr_password1', 'HR notes for this password', ''),
     (9, 3, 'hr2', 'payroll.com', 'hr_password2', 'HR notes for this password', ''),
-    (10, 3, 'hr3', 'benefits.com', 'hr_password3', 'HR notes for this password', './uploads/hr_notes.pdf')
-;
+    (10, 3, 'hr3', 'benefits.com', 'hr_password3', 'HR notes for this password', './uploads/hr_notes.pdf');
 
 
 -- Assign roles and permissions

@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $password = $conn->real_escape_string($_POST['password']);
                     
 
-                    $query = "INSERT INTO users (username, first_name, last_name, email, password, default_role_id) VALUES ('$username', '$first_name', '$last_name', '$email', '$password', 3)";
+                    $query = "INSERT INTO users (username, first_name, last_name, email, password, default_role_id) VALUES ('$username', '$first_name', '$last_name', '$email', '$password', 3, 1)";
                     $result = $conn->query($query);
 
                     if (!$result) {
@@ -59,14 +59,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $first_name = $conn->real_escape_string($_POST['first_name']);
                     $last_name = $conn->real_escape_string($_POST['last_name']);
                     $email = $conn->real_escape_string($_POST['email']);
+                    
+                    //convert the appoved return value to a database value
+                    if (isset($_POST['approved']) && isset($_POST['approved']) == 'on') {
+                        $approved = 1;
+                    } else {
+                        $approved = 0;
+                    }
 
-                    $query = "UPDATE users SET username='$username', first_name='$first_name', last_name='$last_name', email='$email' WHERE user_id=$user_id";
+
+                    $query = "UPDATE users SET username='$username', first_name='$first_name', last_name='$last_name', email='$email', approved='$approved' WHERE user_id=$user_id";
                     $result = $conn->query($query);
 
                     if (!$result) {
                         
-                        die('A fatal error occurred and has been logged.');
-                        // die("Error editing user: " . $conn->error);
+                        die("Error editing user: " . $conn->error);
+                        // die('A fatal error occurred and has been logged.');
+                        
                     }
 
                     
@@ -127,6 +136,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $('#editLastName').val(last_name);
             var email = $(this).data('email');
             $('#editEmail').val(email);
+            var approved = $(this).data('approved');
+            $('#editApproved').prop('checked', approved == 1);
         });
 
         $('.delete-btn').click(function () {            
@@ -187,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <td><?php echo $user['email']; ?></td>
                 <td>
                     <!-- Edit button to open a modal for editing a user -->
-                    <button class="btn btn-warning btn-sm edit-btn" data-toggle="modal"  data-first_name="<?php echo $user['first_name']; ?>"  data-last_name="<?php echo $user['last_name']; ?>" data-email="<?php echo $user['email']; ?>" data-username="<?php echo $user['username']; ?>" data-userid="<?php echo $user['user_id']; ?>" data-target="#editUserModal">
+                    <button class="btn btn-warning btn-sm edit-btn" data-toggle="modal"  data-first_name="<?php echo $user['first_name']; ?>"  data-last_name="<?php echo $user['last_name']; ?>" data-approved="<?php echo $user['approved']; ?>" data-email="<?php echo $user['email']; ?>" data-username="<?php echo $user['username']; ?>" data-userid="<?php echo $user['user_id']; ?>" data-target="#editUserModal">
                         Edit
                     </button>
                     <!-- Delete button to open a modal for deleting a user -->
@@ -234,7 +245,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label for="password">Password:</label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Add User</button>
+                    <button type="submit" class="btn btn-primary">Add Approved User</button>
                 </form>
             </div>
         </div>
@@ -273,6 +284,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label for="editEmail">Email:</label>
                         <input type="email" class="form-control" id="editEmail" name="email" required>
                     </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" name="approved" id="editApproved">
+                        <label class="form-check-label" for="editApproved">User Approved</label>
+                    </div>                   
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                 </form>
             </div>

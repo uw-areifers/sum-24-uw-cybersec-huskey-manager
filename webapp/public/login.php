@@ -7,7 +7,6 @@ $username = 'user';
 $password = 'supersecretpw';
 $database = 'password_manager';
 
-
 $conn = new mysqli($hostname, $username, $password, $database);
 
 if ($conn->connect_error) {
@@ -27,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
+    $sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password' AND approved = 1";
     $result = $conn->query($sql);
 
     if($result->num_rows > 0) {
@@ -84,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="submit" class="btn btn-primary btn-block">Login</button>
             </form>
             <div class="mt-3 text-center">
-                <a href="./users/create_account.php" class="btn btn-secondary btn-block">Create an Account</a>
+                <a href="./users/request_account.php" class="btn btn-secondary btn-block">Request an Account</a>
             </div>
         </div>
     </div>
