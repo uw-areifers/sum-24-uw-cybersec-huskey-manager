@@ -10,7 +10,7 @@ $database = 'password_manager';
 $conn = new mysqli($hostname, $username, $password, $database);
 
 if ($conn->connect_error) {
-    die('A fatal error occurred and has been logged.');
+    die ('A fatal error occurred and has been logged.');
     // die("Connection failed: " . $conn->connect_error);
 }
 
@@ -18,7 +18,7 @@ $uploadDir = './uploads/'; // Specify the directory where you want to save the u
 
 
 // Add Password
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addUsername']) && isset($_POST['addWebsite']) && isset($_POST['addPassword']) && isset($_POST['vaultId'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset ($_POST['addUsername']) && isset ($_POST['addWebsite']) && isset ($_POST['addPassword']) && isset ($_POST['vaultId'])) {
     $addUsername = $_POST['addUsername'];
     $addWebsite = $_POST['addWebsite'];
     $addPassword = $_POST['addPassword'];
@@ -26,14 +26,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addUsername']) && iss
     $vaultId = $_POST['vaultId'];
 
     // Check if a file is uploaded
-    if (!empty($_FILES['file']['name'])) {
+    if (!empty ($_FILES['file']['name'])) {
         $uploadFile = $uploadDir . basename($_FILES['file']['name']);
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
             $filePath = "'" . $uploadFile . "'";
         } else {
             // Handle file upload error            
-            die('Error uploading file.');
+            die ('Error uploading file.');
         }
     } else {
         // If no file is uploaded, set the file path to NULL
@@ -46,8 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addUsername']) && iss
     $resultAddPassword = $conn->query($queryAddPassword);
 
     if (!$resultAddPassword) {
-        
-        die('A fatal error occurred and has been logged.');
+
+        die ('A fatal error occurred and has been logged.');
         // die("Error adding password: " . $conn->error);
     }
     // Redirect to the current page after adding the password
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addUsername']) && iss
 }
 
 // Edit Password
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editPasswordId']) && isset($_POST['editUsername']) && isset($_POST['editPassword']) && isset($_POST['editWebsite']) && isset($_POST['vaultId'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset ($_POST['editPasswordId']) && isset ($_POST['editUsername']) && isset ($_POST['editPassword']) && isset ($_POST['editWebsite']) && isset ($_POST['vaultId'])) {
     $editUsername = $_POST['editUsername'];
     $editWebsite = $_POST['editWebsite'];
     $editPassword = $_POST['editPassword'];
@@ -65,14 +65,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editPasswordId']) && 
     $vaultId = $_POST['vaultId'];
 
     // Check if a new file is uploaded
-    if (!empty($_FILES['editFile']['name'])) {
+    if (!empty ($_FILES['editFile']['name'])) {
         $updateFile = $uploadDir . basename($_FILES['editFile']['name']);
 
         if (move_uploaded_file($_FILES['editFile']['tmp_name'], $updateFile)) {
             $filePath = $updateFile;
         } else {
-            
-            die('Error uploading file.');
+
+            die ('Error uploading file.');
         }
     } else {
         // If no new file is uploaded, preserve the existing file path
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editPasswordId']) && 
         } else {
             // Handle error if existing file path retrieval fails
 
-            die('Error retrieving existing file path.');
+            die ('Error retrieving existing file path.');
         }
     }
 
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editPasswordId']) && 
 
     if (!$resultEditPassword) {
 
-        die('A fatal error occurred and has been logged. File: ' . $filePathSQL . 'Query: ' . $queryEditPassword . ' Error: ' . $conn->error);
+        die ('A fatal error occurred and has been logged. File: ' . $filePathSQL . 'Query: ' . $queryEditPassword . ' Error: ' . $conn->error);
     }
 
     // Redirect to the current page after updating the password
@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editPasswordId']) && 
 
 
 // Delete Password
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deletePasswordId']) && isset($_POST['vaultId'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset ($_POST['deletePasswordId']) && isset ($_POST['vaultId'])) {
     $deletePasswordId = $_POST['deletePasswordId'];
     $vaultId = $_POST['vaultId'];
 
@@ -124,8 +124,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deletePasswordId']) &
     $resultDeletePassword = $conn->query($queryDeletePassword);
 
     if (!$resultDeletePassword) {
-        
-        die('A fatal error occurred and has been logged.');
+
+        die ('A fatal error occurred and has been logged.');
         // die("Error deleting password: " . $conn->error);
     }
 
@@ -135,24 +135,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deletePasswordId']) &
 }
 
 // Retrieve vault information
-$vaultId = isset($_GET['vault_id']) ? $_GET['vault_id'] : 0;
+$vaultId = isset ($_GET['vault_id']) ? $_GET['vault_id'] : 0;
 
 $query = "SELECT vault_name FROM vaults WHERE vault_id = $vaultId";
 $result = $conn->query($query);
 
 if (!$result) {
-    die("Query failed: " . $conn->error);
+    die ("Query failed: " . $conn->error);
 }
 
 $row = $result->fetch_assoc();
 $vaultName = $row['vault_name'];
 
-// Retrieve passwords for the vault
+
 $queryPasswords = "SELECT * FROM vault_passwords WHERE vault_id = $vaultId";
+
+$searchQuery = "";
+//Handle a Search request
+if (isset ($_GET['searchQuery']) && !empty ($_GET['searchQuery'])) {
+    $searchQuery = $_GET['searchQuery'];    
+    $queryPasswords = "SELECT * FROM vault_passwords            
+            WHERE vault_id = $vaultId
+            AND (vault_passwords.username LIKE '%$searchQuery%' OR vault_passwords.website LIKE '%$searchQuery%')";
+}
+
+// Retrieve passwords for the vault
+
 $resultPasswords = $conn->query($queryPasswords);
 
 if (!$resultPasswords) {
-    die("Query failed: " . $conn->error);
+    die ("Query failed: " . $conn->error);
 }
 
 $queryVaultOwner = "SELECT *
@@ -166,14 +178,14 @@ $resultIsOwner = $conn->query($queryVaultOwner);
 
 $isVaultOwner = 0;
 
-if ($resultIsOwner->num_rows > 0) {   
+if ($resultIsOwner->num_rows > 0) {
     $isVaultOwner = true;
 }
 
 
 
 // Handle file deletion
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteFilePasswordId']) && isset($_POST['deleteFileSubmit'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset ($_POST['deleteFilePasswordId']) && isset ($_POST['deleteFileSubmit'])) {
     $deleteFilePasswordId = $_POST['deleteFilePasswordId'];
     $vaultId = $_POST['deleteFileVaultId'];
 
@@ -194,16 +206,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteFilePasswordId'
                 $resultUpdateFilePath = $conn->query($queryUpdateFilePath);
 
                 if (!$resultUpdateFilePath) {
-                    die('A fatal error occurred and has been logged.');
+                    die ('A fatal error occurred and has been logged.');
                 }
             } else {
-                die('A fatal error occurred while deleting the file.');
+                die ('A fatal error occurred while deleting the file.');
             }
         } else {
-            die('The file to be deleted does not exist.');
+            die ('The file to be deleted does not exist.');
         }
-    } else {        
-        die('The file path associated with the password was not found.');
+    } else {
+        die ('The file path associated with the password was not found.');
     }
 
     // Redirect to the current page after deleting the file
@@ -237,12 +249,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteFilePasswordId'
         <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#addPasswordModal">
             Add Password
         </button>
-        <?php if($isVaultOwner): ?>
-            <a href="./vault_permissions.php?vault_id=<?php echo $vaultId ?>" class="btn btn-warning mb-2"  > Edit Vault Permissons </a>        
+        <?php if ($isVaultOwner): ?>
+            <a href="./vault_permissions.php?vault_id=<?php echo $vaultId ?>" class="btn btn-warning mb-2"> Edit Vault
+                Permissons </a>
         <?php endif; ?>
-                 
-        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for passwords..."
+
+        <input type="text" id="searchInput" onkeyup="searchTable(event)" placeholder="Search for passwords..."
             class="form-control mb-3">
+            <?php if (!empty ($searchQuery)) {
+                    // If $searchQuery is not blank, display the label with its value
+                    echo "<label>Search Results for : " . $searchQuery . "</label>"; 
+                } ?>
         <table class="table table-bordered" id="passwordTable">
             <thead>
                 <tr>
@@ -283,14 +300,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteFilePasswordId'
                                 data-password-id="<?php echo $rowPassword['password_id']; ?>">Delete</button>
                         </td>
                         <td>
-                            <?php if (!empty($rowPassword['file_path'])): ?>
+                            <?php if (!empty ($rowPassword['file_path'])): ?>
                                 <a href="download_file.php?file=<?php echo urlencode($rowPassword['file_path']); ?>&vault_id=<?php echo urlencode($vaultId); ?>"
                                     target="_blank">Download File</a>
-                                    <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                                        <input type="hidden" name="deleteFilePasswordId" value="<?php echo $rowPassword['password_id']; ?>">
-                                        <input type="hidden" name="deleteFileVaultId" value="<?php echo $vaultId; ?>">
-                                        <button type="submit" name="deleteFileSubmit" class="btn btn-danger btn-sm">Delete File</button>
-                                    </form>
+                                <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                                    <input type="hidden" name="deleteFilePasswordId"
+                                        value="<?php echo $rowPassword['password_id']; ?>">
+                                    <input type="hidden" name="deleteFileVaultId" value="<?php echo $vaultId; ?>">
+                                    <button type="submit" name="deleteFileSubmit" class="btn btn-danger btn-sm">Delete
+                                        File</button>
+                                </form>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -438,39 +457,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteFilePasswordId'
     <!-- Add your custom JavaScript script for handling modals and row click redirection -->
     <script>
 
-        function searchTable() {
-            // Declare variables
-            var input, filter, table, tr, td, i, j, txtValue;
-            input = document.getElementById("searchInput");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("passwordTable");
-            tr = table.getElementsByTagName("tr");
+        function searchTable(event) {
 
-            // Loop through all table rows
-            for (i = 0; i < tr.length; i++) {
-                // Skip the header row
-                if (i === 0) {
-                    continue;
-                }
-
-                // Flag to indicate if the row should be displayed
-                var shouldDisplay = false;
-
-                // Loop through all td elements in the current row
-                for (j = 0; j < tr[i].getElementsByTagName("td").length; j++) {
-                    td = tr[i].getElementsByTagName("td")[j];
-                    if (td) {
-                        txtValue = td.textContent || td.innerText;
-                        // Check if the search term is found in the current td
-                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            shouldDisplay = true;
-                            break;  // Break out of the inner loop if a match is found in any td
-                        }
-                    }
-                }
-
-                // Set the display style based on the search result
-                tr[i].style.display = shouldDisplay ? "" : "none";
+            if (event.keyCode === 13) {
+                var searchInput = document.getElementById("searchInput").value;
+                window.location.href = "./vault_details.php?vault_id=<?php echo $vaultId ?>&searchQuery=" + searchInput;
             }
         }
 

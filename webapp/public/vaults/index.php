@@ -11,13 +11,13 @@ $database = 'password_manager';
 $conn = new mysqli($hostname, $username, $password, $database);
 
 if ($conn->connect_error) {
-    
-    die('A fatal error occurred and has been logged.');
+
+    die ('A fatal error occurred and has been logged.');
     //die("Connection failed: " . $conn->connect_error);
 }
 
 // Add Vault
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vaultName'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset ($_POST['vaultName'])) {
     $vaultName = $_POST['vaultName'];
     $userId = 1; // Replace with the actual user ID
 
@@ -25,8 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vaultName'])) {
     $result = $conn->query($query);
 
     if (!$result) {
-        
-        die('A fatal error occurred and has been logged.');
+
+        die ('A fatal error occurred and has been logged.');
         // die("Error adding vault: " . $conn->error);
     }
 
@@ -44,18 +44,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vaultName'])) {
         $row = $resultFetchUserId->fetch_assoc();
         $userId = $row['user_id'];
         $roleId = 1;
-    
+
         // If user_id is found, insert the permission
         $queryInsertPermission = "INSERT INTO vault_permissions (user_id, vault_id, role_id) VALUES ($userId, $insertedVaultId, $roleId)";
         $resultInsertPermission = $conn->query($queryInsertPermission);
-    
+
         if (!$resultInsertPermission) {
-            
-          //  die("Error adding permission, Query : " .  $queryInsertPermission . " Error Info : " . $conn->error);
-            die('A fatal error occurred while adding permission.');
-        } 
+
+            //  die("Error adding permission, Query : " .  $queryInsertPermission . " Error Info : " . $conn->error);
+            die ('A fatal error occurred while adding permission.');
+        }
     } else {
-        die("User with username '$user' not found.");
+        die ("User with username '$user' not found.");
     }
 
     // Redirect to the current page after adding the vault
@@ -64,17 +64,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vaultName'])) {
 }
 
 // Edit Vault
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editVaultName']) && isset($_POST['editVaultId'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset ($_POST['editVaultName']) && isset ($_POST['editVaultId'])) {
     $editVaultName = $_POST['editVaultName'];
     $editVaultId = $_POST['editVaultId'];
 
     $query = "UPDATE vaults SET vault_name = '$editVaultName' WHERE vault_id = $editVaultId";
     $result = $conn->query($query);
 
-    if (!$result) {        
-        die('A fatal error occurred and has been logged.');
+    if (!$result) {
+        die ('A fatal error occurred and has been logged.');
         // die("Error editing vault: " . $conn->error);
-    } 
+    }
 
     // Redirect to the current page after editing the vault
     header("Location: {$_SERVER['PHP_SELF']}");
@@ -82,15 +82,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editVaultName']) && i
 }
 
 // Delete Vault
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteVaultId']) && !empty($_POST['deleteVaultId'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset ($_POST['deleteVaultId']) && !empty ($_POST['deleteVaultId'])) {
     $deleteVaultId = $_POST['deleteVaultId'];
 
     $query = "DELETE FROM vaults WHERE vault_id = $deleteVaultId";
 
     $result = $conn->query($query);
 
-    if (!$result) { 
-        die('A fatal error occurred and has been logged.');
+    if (!$result) {
+        die ('A fatal error occurred and has been logged.');
         //die("Error deleting vault: " . $conn->error);
     }
 
@@ -100,10 +100,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteVaultId']) && !
 }
 
 // Retrieve vaults from the database
-if($_COOKIE['isSiteAdministrator'] == true){
-    $query =  "SELECT vaults.vault_id, vaults.vault_name
+if ($_COOKIE['isSiteAdministrator'] == true) {
+    $query = "SELECT vaults.vault_id, vaults.vault_name
                FROM vaults";
-}else{
+} else {
     $query = "SELECT vaults.vault_id, vaults.vault_name
     FROM vaults, vault_permissions, users
     WHERE vaults.vault_id = vault_permissions.vault_id
@@ -111,11 +111,19 @@ if($_COOKIE['isSiteAdministrator'] == true){
     AND users.username = '" . $_COOKIE['authenticated'] . "'";
 }
 
+$searchQuery = "";
+//Handle a Search request
+if (isset ($_GET['searchQuery']) && !empty ($_GET['searchQuery'])) {
+    $searchQuery = $_GET['searchQuery'];    
+    $query = "SELECT vaults.vault_id, vaults.vault_name
+            FROM vaults
+            WHERE vaults.vault_name LIKE '%$searchQuery%'";
+}
 
 $result = $conn->query($query);
 
 if (!$result) {
-    die("Query failed: " . $conn->error);
+    die ("Query failed: " . $conn->error);
 }
 ?>
 
@@ -127,12 +135,13 @@ if (!$result) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Vaults</title>
     <!-- Add Bootstrap CSS link here -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 
 <body>
 
-<?php include '../components/nav-bar.php';?>
+    <?php include '../components/nav-bar.php'; ?>
 
     <div class="container mt-4">
         <h2>Password Vaults</h2>
@@ -145,9 +154,14 @@ if (!$result) {
         <!-- Table to display vaults -->
         <table class="table">
             <thead>
-                <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for vaults..."
+                
+                <input type="text" id="searchInput" onkeypress="searchTable(event)" placeholder="Search for vaults..."
                     class="form-control mb-3">
-                <table class="table table-bordered" id="vaultTable">
+                    <?php if (!empty ($searchQuery)) {
+                    // If $searchQuery is not blank, display the label with its value
+                    echo "<label>Search Results for : " . $searchQuery . "</label>"; 
+                } ?>
+                    <table class="table table-bordered" id="vaultTable">
                     <thead>
                         <tr>
                             <th>Vault Name</th>
@@ -163,8 +177,9 @@ if (!$result) {
                                     <?php echo $row['vault_name']; ?>
                                 </td>
                                 <td>
-                                    <a href="vault_details.php?vault_id=<?php echo $row['vault_id']; ?>" class="btn btn-primary btn-sm" role="button" aria-disabled="true">View Vault</a>
-                                
+                                    <a href="vault_details.php?vault_id=<?php echo $row['vault_id']; ?>"
+                                        class="btn btn-primary btn-sm" role="button" aria-disabled="true">View Vault</a>
+
                                     <!-- Edit button to open a modal for editing a vault -->
                                     <button class="btn btn-warning btn-sm edit-btn" data-toggle="modal"
                                         data-target="#editVaultModal" data-vault-name="<?php echo $row['vault_name']; ?>"
@@ -174,7 +189,7 @@ if (!$result) {
                                     <button class="btn btn-danger btn-sm delete-btn" data-toggle="modal"
                                         data-target="#deleteVaultModal" data-vault-name="<?php echo $row['vault_name']; ?>"
                                         data-vault-id="<?php echo $row['vault_id']; ?>">Delete</button>
-                                </td>   
+                                </td>
                             </tr>
                         <?php endwhile; ?>
                     </tbody>
@@ -267,24 +282,31 @@ if (!$result) {
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!-- Add your custom JavaScript script for handling modals, filtering, and row click redirection -->
     <script>
-        function searchTable() {
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("searchInput");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("vaultTable");
-            tr = table.getElementsByTagName("tr");
 
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[0]; // Change index based on the column you want to search
-                if (td) {
-                    txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
+
+        function searchTable(event) {
+
+            if (event.keyCode === 13) {
+                var searchInput = document.getElementById("searchInput").value;
+                window.location.href = "./index.php?searchQuery=" + searchInput;
             }
+
+
+            // filter = input.value.toUpperCase();
+            // table = document.getElementById("vaultTable");
+            // tr = table.getElementsByTagName("tr");
+
+            // for (i = 0; i < tr.length; i++) {
+            //     td = tr[i].getElementsByTagName("td")[0]; // Change index based on the column you want to search
+            //     if (td) {
+            //         txtValue = td.textContent || td.innerText;
+            //         if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            //             tr[i].style.display = "";
+            //         } else {
+            //             tr[i].style.display = "none";
+            //         }
+            //     }
+            // }        
         }
 
 
