@@ -19,16 +19,32 @@ This web application runs in Docker. Docker is a platform for developing and dep
 
 2. Once you have Docker installed and open, fork this github repository and clone your forked repo.
 
-3. Inside `2024-INFO-310-Password-Manager > bin > start.py` is a python script that will deploy our web application. When we run it, the script will build our docker containers following the `docker-compose.yaml` file.:
+3. Inside VS Code, open your password manager folder. We need to create our `.env` file within our password manager folder. This file will contain the environment variables required for us to deploy our password manager. 
+
+    Environment variables are user-defined values that will alter the way running processes will behave within a system. For now, we will use environment variables to set the credentials needed to access our MySQL database. Our `.gitignore` file will ignore the `.env` file so that it cannot be pushed up to our remote repository. This is a security measure to ensure that secret information such as the database login info does not get saved to our remote repository where an adversary can view it.
+    
+    Inside VS Code, click File > New File...
+
+    ![Create File](/lab-writeup-imgs/create_file.png)
+
+    Call this new file `.env`. Within this file, copy and paste the following information:
+
     ```
-    python .\bin\start.py
+    MYSQL_PORT: 3306
+    MYSQL_PASSWORD: supersecretpw
+    MYSQL_DATABASE: password_manager
+    MYSQL_USER: user
+    BUILD_TARGET: backend-php-server
     ```
 
-    To shut down our web application, we can run the `stop.py` script:
+3. In your terminal, cd into your password manager directory. Once inside you can run the following command to deploy your password manager in Docker:
+    ```
+    docker-compose up --build
+    ```
 
-    ```
-    python .\bin\stop.py
-    ```
+    This will pull the docker images from Docker hub and deploy them into containers following the instructions in the `docker-compose.yaml` file.
+
+    To shut down your password manager, just press `ctrl + c` within your terminal.
 
 4. We now have our web application running in Docker! You can access it at [http://localhost:80](http://localhost:80). Take a look at the Docker Desktop application. Under Containers, you should see that we have one container running with three separate images:
 
