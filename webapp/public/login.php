@@ -2,8 +2,6 @@
 
 session_start();
 
-include './components/loggly-logger.php';
-
 $hostname = 'backend-mysql-database';
 $username = 'user';
 $password = 'supersecretpw';
@@ -49,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     } else {
         $error_message = 'Invalid username or password.';  
-        $logger->warning("Login failed for username: $username");
     }
 
     $conn->close();
