@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UW Password Manager</title>
+    <title>UW HusKey Manager</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <!-- Bootstrap JS and other scripts -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -20,7 +20,7 @@
 <!-- Main Content Area -->
 <div class="container mt-4">
     
-    <h2>Welcome to the UW Cybersecurity Password Manager Project!</h2>
+    <h2>Welcome to the UW HusKey Manager Project!</h2>
 
     <p>Congratulations on getting your Docker Based web app up and running! This quarter we will be embarking on a journey to build a basic password manaager application. Throughout this course, you will have the opportunity to develop, enhance, and secure an application that plays a crucial role in managing assets effectively.</p>
 
@@ -38,7 +38,7 @@
 <!-- Footer -->
 <footer class="footer mt-5 py-3 bg-dark text-white">
     <div class="container text-center">
-        <span>&copy; 2023 UW Cybersecurity Password Manager. All rights reserved.</span>
+        <span>&copy; 2023 UW HusKey Manager. All rights reserved.</span>
     </div>
 </footer>
 

@@ -1,5 +1,5 @@
 # Week 1 | Getting Started
-Welcome to the UW Cybersecurity Password Manager! Until now, this password manager has been used internally by you and your team for work-related password management. Your boss has decided that this password manager could make a great consumer product and would like to make it publicly available by the end of the quarter. You know that in the web application's current state, there are numerous security issues that need to be addressed before the general public can safely use this service. Over the next several weeks, you will apply what you learn in lecture to identify vulnerabilities in this web app, remediate them, and ensure that the web application maintains it's functionality. By the end of the quarter you will be left with a totally secure password manager!
+Welcome to the UW HusKey Manager! Until now, this password manager has been used internally by you and your team for work-related password management. Your boss has decided that the HusKey Manager could make a great consumer product and would like to make it publicly available by the end of the quarter. You know that in the web application's current state, there are numerous security issues that need to be addressed before the general public can safely use this service. Over the next several weeks, you will apply what you learn in lecture to identify vulnerabilities in this web app, remediate them, and ensure that the web application maintains it's functionality. By the end of the quarter you will be left with a more secure HusKey Manager!
 
 Feel free to use whichever IDE (integrated development environment) you prefer for this course. The teaching team will primarily be using Visual Studio Code during lab section, and all demos and examples in the lab instructions will be shown in VS Code. You can download VS Code [here](https://code.visualstudio.com/Download)!
 
@@ -19,7 +19,7 @@ This web application runs in Docker. Docker is a platform for developing and dep
 
 2. Once you have Docker installed and open, fork this github repository and clone your forked repo.
 
-3. Inside VS Code, open your password manager folder. We need to create our `.env` file within our password manager folder. This file will contain the environment variables required for us to deploy our password manager. 
+3. Inside VS Code, open your HusKey Manager folder. We need to create our `.env` file within our HusKey Manager folder. This file will contain the environment variables required for us to deploy our HusKey Manager. 
 
     Environment variables are user-defined values that will alter the way running processes will behave within a system. For now, we will use environment variables to set the credentials needed to access our MySQL database. Our `.gitignore` file will ignore the `.env` file so that it cannot be pushed up to our remote repository. This is a security measure to ensure that secret information such as the database login info does not get saved to our remote repository where an adversary can view it.
     
@@ -37,14 +37,14 @@ This web application runs in Docker. Docker is a platform for developing and dep
     BUILD_TARGET: backend-php-server
     ```
 
-3. In your terminal, cd into your password manager directory. Once inside you can run the following command to deploy your password manager in Docker:
+3. In your terminal, cd into your HusKey Manager directory. Once inside you can run the following command to deploy your HusKey Manager in Docker:
     ```
     docker-compose up --build
     ```
 
     This will pull the docker images from Docker hub and deploy them into containers following the instructions in the `docker-compose.yaml` file.
 
-    To shut down your password manager, just press `ctrl + c` within your terminal.
+    To shut down your HusKey Manager, just press `ctrl + c` within your terminal.
 
 4. We now have our web application running in Docker! You can access it at [http://localhost:80](http://localhost:80). Take a look at the Docker Desktop application. Under Containers, you should see that we have one container running with three separate images:
 
@@ -57,9 +57,9 @@ Our three images include:
 - A PHP server handles the dynamic content and runs our PHP scripts, executing server-side code and communicates directly with the database.
 
 ### Part 2: Using our web application:
-Now that we have our Docker container deployed, and we are able to see our password manager at [http://localhost:80](http://localhost:80), we can begin exploring everything that it can do!
+Now that we have our Docker container deployed, and we are able to see our HusKey Manager at [http://localhost:80](http://localhost:80), we can begin exploring everything that it can do!
 
-1. Once on the main page, you will be prompted to login. Since this password manager is only used by our team, it is much easier if we all use the same login credentials! This way we will never forget our login and can easily see all passwords needed for our work. It is nice to not have to worry about all that security nonsense :) Use the credentials below to login:
+1. Once on the main page, you will be prompted to login. Since the HusKey Manager is only used by our team, it is much easier if we all use the same login credentials! This way we will never forget our login and can easily see all passwords needed for our work. It is nice to not have to worry about all that security nonsense :) Use the credentials below to login:
 
 ```
 username: username
@@ -68,9 +68,9 @@ password: password!
 
 ![Create an account](/lab-writeup-imgs/login.png)
 
-2. Now that you have logged in, you should be able to see the password manager's homepage.
+2. Now that you have logged in, you should be able to see the HusKey Manager's homepage.
 
-![Password Manager Homepage](/lab-writeup-imgs/password_manager_homepage.png)
+![HusKey Manager Homepage](/lab-writeup-imgs/password_manager_homepage.png)
 
 3. In the top right corner, you will see "Vaults". Click on that to view all password vaults used by your company.
 
