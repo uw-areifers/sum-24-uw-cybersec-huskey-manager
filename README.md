@@ -17,7 +17,7 @@ This web application runs in Docker. Docker is a platform for developing and dep
 
 1. You will need to install Docker Desktop, which can be downloaded [here](https://www.docker.com/products/docker-desktop/). Follow the installation instructions, and note that you do not need to create a Docker account.
 
-2. Once you have Docker installed and open, fork this github repository and clone your forked repo.
+2. Once you have Docker installed and open, cloen this github repo to your local machine.
 
 3. Inside VS Code, open your HusKey Manager folder. We need to create our `.env` file within our HusKey Manager folder. This file will contain the environment variables required for us to deploy our HusKey Manager. 
 

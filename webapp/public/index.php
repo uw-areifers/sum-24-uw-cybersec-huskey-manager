@@ -11,6 +11,11 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+        .footer-custom {
+            background-color: #4b2e83 !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -36,9 +41,9 @@
 </div>
 
 <!-- Footer -->
-<footer class="footer mt-5 py-3 bg-dark text-white">
+<footer class="footer mt-5 py-3 bg-dark text-white footer-custom">
     <div class="container text-center">
-        <span>&copy; 2023 UW HusKey Manager. All rights reserved.</span>
+        <span>&copy; 2024 UW HusKey Manager. All rights reserved.</span>
     </div>
 </footer>
 

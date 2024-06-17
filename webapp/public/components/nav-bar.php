@@ -1,6 +1,18 @@
 <!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">UW HusKey Manager</a>
+<style>
+    .navbar-custom {
+        background-color: #4b2e83 !important;
+    }
+
+    .huskey-logo {
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+    }
+</style>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-custom">
+    <img src="../img/huskey_logo.PNG" class="huskey-logo">
+    <a class="navbar-brand navbar-custom" href="#">UW HusKey Manager</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
